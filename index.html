@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family ATM</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Family ATM</h1>
+        <div id="login">
+            <h2>Login</h2>
+            <label for="pin">Enter PIN:</label>
+            <input type="text" id="pin">
+            <button onclick="login()">Login</button>
+            <p id="loginMessage"></p>
+        </div>
+        <div id="atmMenu" style="display: none;">
+            <h2>Welcome, <span id="userName"></span>!</h2>
+            <button onclick="checkBalance()">Check Balance</button>
+            <button onclick="deposit()">Deposit Money</button>
+            <button onclick="withdraw()">Withdraw Money</button>
+            <button onclick="logout()">Logout</button>
+            <p id="atmMessage"></p>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+}
+
+.container {
+    border: 1px solid #ccc;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+}
+
+h1 {
+    text-align: center;
+}
+
+button {
+    margin: 5px;
+}
+const accounts = [
+    { name: "Alice", balance: 1000.0, pin: "1234" },
+    { name: "Bob", balance: 1500.0, pin: "5678" },
+    { name: "Charlie", balance: 2000.0, pin: "9101" }
+];
+
+let currentAccount = null;
+
+function login() {
+    const pin = document.getElementById('pin').value;
+    const account = accounts.find(acc => acc.pin === pin);
+
+    if (account) {
+        currentAccount = account;
+        document.getElementById('login').style.display = 'none';
+        document.getElementById('atmMenu').style.display = 'block';
+        document.getElementById('userName').textContent = account.name;
+        document.getElementById('atmMessage').textContent = '';
+        document.getElementById('loginMessage').textContent = '';
+    } else {
+        document.getElementById('loginMessage').textContent = 'Incorrect PIN. Please try again.';
+    }
+}
+
+function checkBalance() {
+    document.getElementById('atmMessage').textContent = Your balance is $${currentAccount.balance};
+}
+
+function deposit() {
+    const amount = parseFloat(prompt('Enter deposit amount:'));
+    if (amount > 0) {
+        currentAccount.balance += amount;
+        document.getElementById('atmMessage').textContent = Deposit successful. Your new balance is $${currentAccount.balance};
+    } else {
+        document.getElementById('atmMessage').textContent = 'Invalid deposit amount.';
+    }
+}
+
+function withdraw() {
+    const amount = parseFloat(prompt('Enter withdrawal amount:'));
+    if (amount > 0 && amount <= currentAccount.balance) {
+        currentAccount.balance -= amount;
+        document.getElementById('atmMessage').textContent = Withdrawal successful. Your new balance is $${currentAccount.balance};
+    } else {
+        document.getElementById('atmMessage').textContent = 'Invalid withdrawal amount or insufficient funds.';
+    }
+}
+
+function logout() {
+    currentAccount = null;
+    document.getElementById('login').style.display = 'block';
+    document.getElementById('atmMenu').style.display = 'none';
+}
